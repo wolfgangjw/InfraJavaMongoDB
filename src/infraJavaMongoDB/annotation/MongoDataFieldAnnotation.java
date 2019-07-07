@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface MongoDataFieldAnnotation {
-	String FieldName();
+	String ColumnName();
 
 	String Involved();
 }
