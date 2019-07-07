@@ -12,10 +12,8 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/bson-3.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mongodb-driver-3.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mongodb-driver-core-3.10.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
