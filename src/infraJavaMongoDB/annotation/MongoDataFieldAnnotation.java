@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 public @interface MongoDataFieldAnnotation {
 	String ColumnName();
 
-	String Involved();
+	String Involved() default "";
 }

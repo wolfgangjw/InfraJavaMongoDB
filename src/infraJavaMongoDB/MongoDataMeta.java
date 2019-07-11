@@ -1,7 +1,6 @@
 package infraJavaMongoDB;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,6 +19,7 @@ final class MongoDataMeta {
 	private final Class<?> ThisClass;
 
 	private final Map<String, Set<Field>> InvolvedKeyFieldMap;
+	private final Map<String, Set<String>> InvolvedKeyFieldNameMap;
 	private final Map<Field, String> FieldColumnMap;
 
 	MongoDataMeta(Class<?> c) throws Exception {
@@ -30,6 +30,7 @@ final class MongoDataMeta {
 		ThisClass = c;
 		CollectionName = c.getAnnotation(MongoDataAnnotation.class).CollectionName();
 		InvolvedKeyFieldMap = new HashMap<String, Set<Field>>();
+		InvolvedKeyFieldNameMap = new HashMap<String, Set<String>>();
 		FieldColumnMap = new HashMap<Field, String>();
 		SetMeta();
 	}
@@ -40,6 +41,10 @@ final class MongoDataMeta {
 
 	protected Map<String, Set<Field>> GetInvolvedKeyFieldMap() {
 		return InvolvedKeyFieldMap;
+	}
+
+	protected Map<String, Set<String>> GetInvolvedKeyFieldNameMap() {
+		return InvolvedKeyFieldNameMap;
 	}
 
 	protected Map<Field, String> GetFieldColumnMap() {
@@ -74,7 +79,9 @@ final class MongoDataMeta {
 	private void AddFieldIntoInvolvedKeyFieldMap(Field field, String key) {
 		if (!InvolvedKeyFieldMap.containsKey(key)) {
 			InvolvedKeyFieldMap.put(key, new HashSet<Field>());
+			InvolvedKeyFieldNameMap.put(key, new HashSet<String>());
 		}
 		InvolvedKeyFieldMap.get(key).add(field);
+		InvolvedKeyFieldNameMap.get(key).add(field.getName());
 	}
 }

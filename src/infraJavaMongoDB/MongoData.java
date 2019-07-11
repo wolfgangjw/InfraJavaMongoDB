@@ -1,7 +1,6 @@
 package infraJavaMongoDB;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,30 +12,47 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 public abstract class MongoData {
-	private static final Map<Class, MongoDataMeta> Meta;
+	private static final Map<Class<?>, MongoDataMeta> Meta;
 	static {
-		Meta = new HashMap<Class, MongoDataMeta>();
+		Meta = new HashMap<Class<?>, MongoDataMeta>();
 	}
 
 	private static MongoDatabase MongoDatabase;
 
-	protected static void Initialize(String host, int port, String database, Class c) throws Exception {
+	public static void Initialize(String host, int port, String database) {
 		if (MongoDatabase != null) {
 			return;
 		}
 		@SuppressWarnings("resource")
 		MongoClient mongoClient = new MongoClient(host, port);
 		MongoDatabase = mongoClient.getDatabase(database);
-		Meta.put(c, new MongoDataMeta(c));
+	}
+
+	protected static void Initialize(Class<?> c) {
+		if (Meta.containsKey(c)) {
+			return;
+		}
+		try {
+			Meta.put(c, new MongoDataMeta(c));
+		} catch (Exception e) {
+			// TODO: log and consider if the server should be stop.
+		}
 	}
 
 	protected MongoData(boolean isChangable) {
-		this(null, isChangable);
+		this("", isChangable);
 	}
 
 	protected MongoData(String involved, boolean isChangable) {
-		Involved = involved;
+		involved = involved.trim();
+		Involved = involved.isEmpty() ? null : involved.toUpperCase();
 		IsChangable = isChangable;
+	}
+
+	protected boolean IsInvolvedField(String involved, String fieldName) {
+		involved = involved == null ? null : involved.trim().toUpperCase();
+		MongoDataMeta mdm = Meta.get(this.getClass());
+		return mdm.GetInvolvedKeyFieldNameMap().get(involved).contains(fieldName);
 	}
 
 	protected String Involved;
