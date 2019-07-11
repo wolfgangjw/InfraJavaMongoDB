@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -55,6 +56,7 @@ public abstract class MongoData {
 		return mdm.GetInvolvedKeyFieldNameMap().get(involved).contains(fieldName);
 	}
 
+	protected ObjectId _id;
 	protected String Involved;
 	protected boolean IsChangable;
 
@@ -68,9 +70,14 @@ public abstract class MongoData {
 			document.append(fieldColumnMap.get(field), ((MongoDataField<?>) field.get(data)).Get());
 		}
 		MongoDatabase.getCollection(mdm.GetCollectionName()).insertOne(document);
+		data._id = (ObjectId) document.get("_id");
 	}
 
 	public void Create() throws Exception {
 		Create(this);
+	}
+
+	public ObjectId getId() {
+		return _id;
 	}
 }
